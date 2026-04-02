@@ -1,0 +1,42 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      String   @default("VIEWER") // VIEWER, ANALYST, ADMIN
+  status    String   @default("ACTIVE") // ACTIVE, INACTIVE
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  records FinancialRecord[]
+}
+
+model FinancialRecord {
+  id        String   @id @default(uuid())
+  userId    String
+  amount    Float
+  type      String   // INCOME, EXPENSE
+  category  String
+  date      DateTime
+  notes     String?
+  createdAt DateTime @default(now())
+  deletedAt DateTime?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([type])
+  @@index([category])
+  @@index([date])
+}
