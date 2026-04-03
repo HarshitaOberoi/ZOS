@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { toast } from "sonner";
 import { ArrowRight } from "lucide-react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
@@ -40,6 +41,8 @@ export function RegisterPage() {
         password: values.password,
       });
       navigate("/login");
+    } catch (error) {
+      toast.error(error.message || "Failed to create account. Please try again.");
     } finally {
       setSubmitting(false);
     }

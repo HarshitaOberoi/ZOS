@@ -1,6 +1,7 @@
 const express = require("express");
 const fs = require("fs");
 const path = require("path");
+const cors = require("cors");
 const config = require("./config");
 const authRoutes = require("./routes/auth.routes");
 const userRoutes = require("./routes/user.routes");
@@ -10,9 +11,14 @@ const { errorHandler } = require("./middlewares/error.middleware");
 const { apiLimiter } = require("./middlewares/rateLimiter.middleware");
 
 const app = express();
+
+// Trust Vercel's proxy
+app.set("trust proxy", 1);
+
 const distPath = path.resolve(__dirname, "../dist");
 const hasFrontendBuild = fs.existsSync(distPath);
 
+app.use(cors());
 app.use(express.json());
 
 app.use("/api", apiLimiter);

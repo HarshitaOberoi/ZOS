@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { toast } from "sonner";
 import {
   ArrowRight,
   BadgeDollarSign,
@@ -60,6 +61,8 @@ export function LoginPage() {
     try {
       await login(values);
       navigate("/");
+    } catch (error) {
+      toast.error(error.message || "Invalid credentials. Please check your email and password.");
     } finally {
       setSubmitting(false);
     }
