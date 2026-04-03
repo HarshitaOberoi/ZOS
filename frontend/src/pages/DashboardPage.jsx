@@ -76,14 +76,14 @@ export function DashboardPage() {
         </div>
       </section>
 
-      <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+      <section className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-5 items-start">
         <MetricCard label="Total income" value={summary.totalIncome} delta={incomeDelta} accent="#38bdf8" positive />
         <MetricCard label="Total expenses" value={summary.totalExpenses} delta={expenseDelta} accent="#f97316" positive={false} />
         <MetricCard label="Net balance" value={summary.netBalance} delta={summary.netBalance >= 0 ? "Healthy runway" : "Spending exceeds intake"} accent="#22c55e" positive={summary.netBalance >= 0} />
         <MetricCard label="Avg. monthly net" value={(summary.monthlySummary || []).reduce((sum, item) => sum + item.net, 0) / Math.max(summary.monthlySummary.length, 1)} delta="Trend across tracked months" accent="#f59e0b" positive />
       </section>
 
-      <section className="grid gap-6 xl:grid-cols-[1.4fr_1fr]">
+      <section className="grid grid-cols-[repeat(auto-fit,minmax(400px,1fr))] gap-6 items-start">
         <CashflowChart data={summary.monthlySummary} />
         <CategoryPieChart totals={summary.categoryTotals} />
       </section>

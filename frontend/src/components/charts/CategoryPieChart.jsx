@@ -8,7 +8,7 @@ export function CategoryPieChart({ totals = {} }) {
   const data = Object.entries({ ...totals.income, ...totals.expense }).map(([name, value]) => ({ name, value }));
 
   return (
-    <Card className="rounded-[32px] p-6">
+    <Card className="rounded-[32px] p-6 h-auto w-full">
       <div className="mb-6">
         <p className="text-sm text-[var(--muted)]">Category distribution</p>
         <h3 className="mt-2 text-xl font-semibold">Where the money moves</h3>

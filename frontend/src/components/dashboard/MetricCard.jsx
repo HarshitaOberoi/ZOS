@@ -5,8 +5,8 @@ import { currency } from "@/lib/utils";
 
 export function MetricCard({ label, value, delta, positive = true, accent }) {
   return (
-    <motion.div whileHover={{ y: -6 }} transition={{ duration: 0.22 }}>
-      <Card className="metric-shine rounded-[30px] p-6">
+    <motion.div whileHover={{ y: -6 }} transition={{ duration: 0.22 }} className="w-full">
+      <Card className="metric-shine rounded-[30px] p-6 h-auto">
         <div className="flex items-center justify-between gap-3">
           <div>
             <p className="text-sm text-[var(--muted)]">{label}</p>

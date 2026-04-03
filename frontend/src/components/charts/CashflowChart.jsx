@@ -17,7 +17,7 @@ export function CashflowChart({ data = [] }) {
   }));
 
   return (
-    <Card className="rounded-[32px] p-6">
+    <Card className="rounded-[32px] p-6 h-auto w-full">
       <div className="mb-6 flex items-center justify-between gap-4">
         <div>
           <p className="text-sm text-[var(--muted)]">Cashflow trajectory</p>

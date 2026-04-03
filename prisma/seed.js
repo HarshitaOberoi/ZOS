@@ -34,6 +34,18 @@ const demoRecords = [
   { amount: 3200, type: "INCOME", category: "Investments", date: "2026-01-22", notes: "Portfolio distribution" },
   { amount: 2400, type: "EXPENSE", category: "Travel", date: "2026-01-10", notes: "Client workshop travel" },
   { amount: 1200, type: "EXPENSE", category: "Operations", date: "2025-12-18", notes: "Office operations" },
+  { amount: 4500, type: "INCOME", category: "Dividends", date: "2026-03-30", notes: "Quarterly stock dividends" },
+  { amount: 1200, type: "EXPENSE", category: "Utilities", date: "2026-03-25", notes: "Cloud hosting and office utilities" },
+  { amount: 8000, type: "INCOME", category: "Project Bonus", date: "2026-03-10", notes: "Q1 performance incentive" },
+  { amount: 2500, type: "EXPENSE", category: "Training", date: "2026-02-20", notes: "Professional development courses" },
+  { amount: 15000, type: "INCOME", category: "Consulting", date: "2026-02-05", notes: "Architecture review project" },
+  { amount: 500, type: "EXPENSE", category: "Software", date: "2026-01-15", notes: "Adobe Creative Cloud renewal" },
+  { amount: 12000, type: "INCOME", category: "Salary", date: "2026-03-01", notes: "Base salary payment" },
+  { amount: 300, type: "EXPENSE", category: "Meals", date: "2026-03-05", notes: "Team lunch meeting" },
+  { amount: 600, type: "EXPENSE", category: "Insurance", date: "2026-02-28", notes: "Monthly business insurance" },
+  { amount: 2100, type: "INCOME", category: "Rental Income", date: "2026-03-15", notes: "Sublet office space" },
+  { amount: 1400, type: "EXPENSE", category: "Legal", date: "2026-01-25", notes: "Contract review services" },
+  { amount: 250, type: "EXPENSE", category: "Supplies", date: "2026-03-22", notes: "Office stationery and supplies" },
 ];
 
 async function seed() {
@@ -61,16 +73,20 @@ async function seed() {
       where: { userId: createdUser.id, deletedAt: null },
     });
 
-    if (!existingRecords) {
-      await prisma.financialRecord.createMany({
-        data: demoRecords.map((record, index) => ({
-          ...record,
-          amount: record.amount + (createdUser.role === "ADMIN" ? index * 35 : createdUser.role === "ANALYST" ? index * 22 : index * 14),
-          date: new Date(record.date),
-          userId: createdUser.id,
-        })),
+    if (existingRecords > 0) {
+      await prisma.financialRecord.deleteMany({
+        where: { userId: createdUser.id },
       });
     }
+
+    await prisma.financialRecord.createMany({
+      data: demoRecords.map((record, index) => ({
+        ...record,
+        amount: record.amount + (createdUser.role === "ADMIN" ? index * 35 : createdUser.role === "ANALYST" ? index * 22 : index * 14),
+        date: new Date(record.date),
+        userId: createdUser.id,
+      })),
+    });
   }
 
   console.log("Seed complete. Demo credentials:");
