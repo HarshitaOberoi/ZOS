@@ -121,7 +121,7 @@ export function LoginPage() {
                 </Link>
               </div>
 
-              <div className="mt-10 grid gap-4 sm:grid-cols-3">
+              <div className="mt-10 grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-5 items-start">
                 {[
                   {
                     value: "3",
@@ -141,7 +141,7 @@ export function LoginPage() {
                 ].map((item) => (
                   <div
                     key={item.label}
-                    className="min-w-0 rounded-[28px] border border-white/10 bg-white/6 p-5 sm:min-h-[220px] light:border-slate-200 light:bg-white/75"
+                    className="min-w-0 rounded-[28px] border border-white/10 bg-white/6 p-5 light:border-slate-200 light:bg-white/75"
                   >
                     <p className="text-3xl font-semibold tracking-[-0.04em] text-[var(--foreground)]">{item.value}</p>
                     <p className="mt-2 text-xs uppercase tracking-[0.25em] text-sky-200/75 light:text-sky-700">{item.label}</p>
@@ -180,25 +180,25 @@ export function LoginPage() {
                 </div>
               </div>
 
-              <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-[minmax(0,1.15fr)_minmax(0,1.15fr)]">
-                <div className="rounded-[30px] border border-white/10 bg-white/6 p-6 md:min-h-[220px] light:border-slate-200 light:bg-white/75">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-amber-400/12 text-amber-200 light:text-amber-700">
-                    <BadgeDollarSign className="h-5 w-5" />
-                  </div>
-                  <p className="mt-5 text-lg font-semibold">Finance hub</p>
-                  <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
-                    Track totals, trends, and category spend in one place.
-                  </p>
+              <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-4 items-start">
+              <div className="rounded-[30px] border border-white/10 bg-white/6 p-6 light:border-slate-200 light:bg-white/75">
+                <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-amber-400/12 text-amber-200 light:text-amber-700">
+                  <BadgeDollarSign className="h-5 w-5" />
                 </div>
-                <div className="rounded-[30px] border border-white/10 bg-white/6 p-6 md:min-h-[220px] light:border-slate-200 light:bg-white/75">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-400/12 text-emerald-200 light:text-emerald-700">
-                    <Users className="h-5 w-5" />
-                  </div>
-                  <p className="mt-5 text-lg font-semibold">Role-aware team</p>
-                  <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
-                    Analysts edit, admins manage, viewers stay read-only.
-                  </p>
+                <p className="mt-5 text-lg font-semibold">Finance hub</p>
+                <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+                  Track totals, trends, and category spend in one place.
+                </p>
+              </div>
+              <div className="rounded-[30px] border border-white/10 bg-white/6 p-6 light:border-slate-200 light:bg-white/75">
+                <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-400/12 text-emerald-200 light:text-emerald-700">
+                  <Users className="h-5 w-5" />
                 </div>
+                <p className="mt-5 text-lg font-semibold">Role-aware team</p>
+                <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+                  Analysts edit, admins manage, viewers stay read-only.
+                </p>
+              </div>
               </div>
             </div>
           </div>
