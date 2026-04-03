@@ -303,12 +303,17 @@ Seeded demo users from `prisma/seed.js`:
 
 ## Screenshots / UI Preview
 
-Add screenshots in this section to make the project easier to evaluate visually.
+### Login Experience
+![Login Screen](screenshots/landing.PNG)
 
-- Login screen: `Add screenshot here`
-- Dashboard overview: `Add screenshot here`
-- Records workspace: `Add screenshot here`
-- Admin panel: `Add screenshot here`
+### Dashboard Overview
+![Dashboard Overview](screenshots/dashboard.PNG)
+
+### Records Workspace
+![Records Workspace](screenshots/records.PNG)
+
+### Admin Control Center
+![Admin Panel](screenshots/admin.PNG)
 
 ## Future Enhancements
 
