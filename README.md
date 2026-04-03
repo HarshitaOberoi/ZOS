@@ -42,7 +42,7 @@ flowchart LR
     C --> D[Controllers]
     D --> E[Services]
     E --> F[Prisma ORM]
-    F --> G[(SQLite Database)]
+    F --> G[(PostgreSQL Database)]
 ```
 
 ### Request Flow
@@ -92,7 +92,7 @@ flowchart TD
 
 ### Database
 
-- SQLite
+- PostgreSQL
 - Prisma ORM
 
 ### Tools
@@ -236,9 +236,11 @@ If needed, you can also create `.env` manually using the sample below.
 
 ### 4. Prepare the database
 
+Ensure your `DATABASE_URL` in `.env` points to your PostgreSQL database. Then, apply migrations and seed the database:
+
 ```bash
-npx prisma migrate dev --name init
-npm run db:seed
+npx prisma migrate deploy
+npx prisma db seed
 ```
 
 ### 5. Run the backend and frontend in development
@@ -278,7 +280,7 @@ When a frontend build exists, the Express server serves the built dashboard from
 Use a root-level `.env` file like this:
 
 ```env
-DATABASE_URL="file:./dev.db"
+DATABASE_URL="postgresql://user:password@host:port/database"
 PORT=3000
 JWT_SECRET="replace-with-a-secure-secret"
 VITE_API_URL="http://localhost:3000"
@@ -286,7 +288,7 @@ VITE_API_URL="http://localhost:3000"
 
 ### Variable Notes
 
-- `DATABASE_URL`: Prisma connection string for SQLite
+- `DATABASE_URL`: Prisma connection string for PostgreSQL
 - `PORT`: port used by the Express API
 - `JWT_SECRET`: secret used to sign and verify JWT tokens
 - `VITE_API_URL`: frontend target for API requests
@@ -325,10 +327,49 @@ Add screenshots in this section to make the project easier to evaluate visually.
 - JWT authentication is used to keep the client stateless and simple for SPA workflows
 - A service layer is used so business rules stay separate from controllers and routing
 - Prisma is used to simplify database access and keep data operations structured
-- SQLite is a practical default for local development and demonstrations
+- PostgreSQL is used for robust data management and cloud deployment
 - Dashboard analytics are computed per authenticated user, which keeps data isolated
 - Admins currently manage users and records within the same application, but records are still scoped to the authenticated user in the present data model
 
 ## Conclusion
 
 Zorvyn demonstrates more than a visually polished dashboard. It shows clean layering from frontend to database, practical role-based access control, API validation, analytics computation, and a structure that can grow into a larger real-world system. As a project, it highlights architectural clarity, scalability-minded thinking, and an understanding of how product experience and backend discipline work together.
+
+## Deployment
+
+This application is configured for deployment on both Render and Vercel.
+
+### Render
+
+Render is used for hosting the PostgreSQL database and can also host the full-stack application.
+
+**Build Command**: `npm run build`
+**Start Command**: `npm start`
+
+**Environment Variables**:
+- `DATABASE_URL`: Your PostgreSQL connection string.
+- `JWT_SECRET`: A secure secret for JWT token signing.
+
+### Vercel
+
+Vercel is used for hosting the full-stack application (frontend and backend serverless functions).
+
+**`vercel.json` Configuration**:
+The `vercel.json` file in the project root configures Vercel to serve the frontend and route API requests to the Node.js backend as a serverless function.
+
+```json
+{
+  "version": 2,
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/api/index.js" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}
+```
+
+**Environment Variables**:
+- `DATABASE_URL`: Your PostgreSQL connection string (same as Render).
+- `JWT_SECRET`: A secure secret for JWT token signing (same as Render).
+- `NODE_ENV`: Set to `production`.
+
+**Important**: Ensure `DATABASE_URL` and `JWT_SECRET` are identical on both Render and Vercel if you intend to use the same database and allow seamless user sessions across deployments.
