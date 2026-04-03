@@ -33,6 +33,20 @@ The system is designed around real-world patterns that matter in production appl
 - Protected routes and role-aware navigation
 - Production-style frontend build served by the Express server
 
+## Screenshots / UI Preview
+
+### Login Experience
+![Login Screen](screenshots/landing.PNG)
+
+### Dashboard Overview
+![Dashboard Overview](screenshots/dashboard.PNG)
+
+### Records Workspace
+![Records Workspace](screenshots/records.PNG)
+
+### Admin Control Center
+![Admin Panel](screenshots/admin.PNG)
+
 ## System Architecture
 
 ```mermaid
@@ -300,20 +314,6 @@ Seeded demo users from `prisma/seed.js`:
 - `admin@zorvyn.io` / `Admin@123`
 - `analyst@zorvyn.io` / `Analyst@123`
 - `viewer@zorvyn.io` / `Viewer@123`
-
-## Screenshots / UI Preview
-
-### Login Experience
-![Login Screen](screenshots/landing.PNG)
-
-### Dashboard Overview
-![Dashboard Overview](screenshots/dashboard.PNG)
-
-### Records Workspace
-![Records Workspace](screenshots/records.PNG)
-
-### Admin Control Center
-![Admin Panel](screenshots/admin.PNG)
 
 ## Future Enhancements
 
