@@ -41,6 +41,11 @@ if (hasFrontendBuild) {
 
 app.use(errorHandler);
 
-app.listen(config.PORT, () => {
-  console.log(`Server is running on port ${config.PORT}`);
-});
+// For local development
+if (process.env.NODE_ENV !== "production" || !process.env.VERCEL) {
+  app.listen(config.PORT, () => {
+    console.log(`Server is running on port ${config.PORT}`);
+  });
+}
+
+module.exports = app;
