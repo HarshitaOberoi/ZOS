@@ -1,13 +1,13 @@
-import { Search, SlidersHorizontal } from "lucide-react";
+import { Download, Search, SlidersHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { CATEGORY_OPTIONS } from "@/lib/constants";
 
-export function RecordsToolbar({ filters, setFilters, canManage, onCreate }) {
+export function RecordsToolbar({ filters, setFilters, canManage, onCreate, onExport }) {
   return (
     <div className="glass-panel rounded-[32px] p-5">
-      <div className="grid gap-4 xl:grid-cols-[1.3fr_repeat(4,minmax(0,1fr))_auto]">
+      <div className="grid gap-4 xl:grid-cols-[1.3fr_repeat(4,minmax(0,1fr))_auto_auto]">
         <div className="relative">
           <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--muted)]" />
           <Input
@@ -38,6 +38,12 @@ export function RecordsToolbar({ filters, setFilters, canManage, onCreate }) {
           <option value="category-asc">Category A-Z</option>
         </Select>
         <div className="flex items-center gap-3 xl:justify-end">
+          <div
+            onClick={onExport}
+            className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-[var(--muted)] transition hover:bg-white/10 light:border-slate-200 light:bg-white"
+          >
+            <Download className="h-4 w-4" />
+          </div>
           <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-[var(--muted)] light:border-slate-200 light:bg-white">
             <SlidersHorizontal className="h-4 w-4" />
           </div>

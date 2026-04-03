@@ -11,6 +11,7 @@ router.use(authenticate);
 
 router.post("/", requireRole([ROLES.ADMIN, ROLES.ANALYST]), validate(recordValidation.createRecord), recordController.createRecord);
 router.get("/", requireRole([ROLES.ADMIN, ROLES.ANALYST, ROLES.VIEWER]), validate(recordValidation.getRecords), recordController.getRecords);
+router.get("/export/csv", requireRole([ROLES.ADMIN, ROLES.ANALYST, ROLES.VIEWER]), validate(recordValidation.getRecords), recordController.exportCSV);
 router.get("/:id", requireRole([ROLES.ADMIN, ROLES.ANALYST, ROLES.VIEWER]), recordController.getRecordById);
 router.put("/:id", requireRole([ROLES.ADMIN, ROLES.ANALYST]), validate(recordValidation.updateRecord), recordController.updateRecord);
 router.delete("/:id", requireRole([ROLES.ADMIN]), validate(recordValidation.deleteRecord), recordController.deleteRecord);

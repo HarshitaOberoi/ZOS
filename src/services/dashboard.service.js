@@ -94,6 +94,42 @@ const computeMonthlySummary = (records) => {
     .sort((a, b) => b.month.localeCompare(a.month));
 };
 
+/**
+ * Global search across records and users (if admin).
+ */
+const globalSearch = async (userId, query, role) => {
+  if (!query || query.length < 2) return { records: [], users: [] };
+
+  const records = await prisma.financialRecord.findMany({
+    where: {
+      userId,
+      deletedAt: null,
+      OR: [
+        { notes: { contains: query, mode: "insensitive" } },
+        { category: { contains: query, mode: "insensitive" } },
+      ],
+    },
+    take: 10,
+    orderBy: { date: "desc" },
+  });
+
+  let users = [];
+  if (role === "ADMIN") {
+    users = await prisma.user.findMany({
+      where: {
+        OR: [
+          { name: { contains: query, mode: "insensitive" } },
+          { email: { contains: query, mode: "insensitive" } },
+        ],
+      },
+      take: 5,
+    });
+  }
+
+  return { records, users };
+};
+
 module.exports = {
   getSummary,
+  globalSearch,
 };

@@ -6,6 +6,12 @@ const getSummary = catchAsync(async (req, res) => {
   res.json(summary);
 });
 
+const globalSearch = catchAsync(async (req, res) => {
+  const results = await dashboardService.globalSearch(req.user.id, req.query.query, req.user.role);
+  res.json(results);
+});
+
 module.exports = {
   getSummary,
+  globalSearch,
 };

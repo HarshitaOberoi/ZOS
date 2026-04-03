@@ -48,7 +48,10 @@ const getRecords = async (userId, filters = {}) => {
   const where = { userId, deletedAt: null };
 
   if (search) {
-    where.notes = { contains: search };
+    where.OR = [
+      { notes: { contains: search, mode: "insensitive" } },
+      { category: { contains: search, mode: "insensitive" } },
+    ];
   }
 
   if (type) {

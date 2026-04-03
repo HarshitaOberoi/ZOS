@@ -26,10 +26,37 @@ const deleteRecord = catchAsync(async (req, res) => {
   res.json(result);
 });
 
+const exportCSV = catchAsync(async (req, res) => {
+  const { type, category, startDate, endDate, search } = req.query;
+  const { records } = await recordService.list({
+    userId: req.user.id,
+    type,
+    category,
+    startDate,
+    endDate,
+    search,
+    limit: 10000, // Large limit for export
+  });
+
+  const csvHeaders = "Date,Type,Category,Amount,Notes\n";
+  const csvRows = records
+    .map((r) => {
+      const date = new Date(r.date).toLocaleDateString();
+      const notes = r.notes ? `"${r.notes.replace(/"/g, '""')}"` : "";
+      return `${date},${r.type},${r.category},${r.amount},${notes}`;
+    })
+    .join("\n");
+
+  res.setHeader("Content-Type", "text/csv");
+  res.setHeader("Content-Disposition", `attachment; filename=zorvyn-records-${new Date().toISOString().split("T")[0]}.csv`);
+  res.status(200).send(csvHeaders + csvRows);
+});
+
 module.exports = {
   createRecord,
   getRecords,
   getRecordById,
   updateRecord,
   deleteRecord,
+  exportCSV,
 };

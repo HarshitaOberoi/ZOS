@@ -82,6 +82,7 @@ export const dashboardService = {
     );
     return request(`/api/dashboard/summary${query.size ? `?${query}` : ""}`);
   },
+  search: (query) => request(`/api/dashboard/search?query=${encodeURIComponent(query)}`),
 };
 
 export const recordService = {
@@ -105,6 +106,20 @@ export const recordService = {
     request(`/api/records/${id}`, {
       method: "DELETE",
     }),
+  exportCSV: async (params) => {
+    const query = new URLSearchParams(
+      Object.entries(params || {}).filter(([, value]) => value !== "" && value != null)
+    );
+    const headers = {};
+    if (authToken) {
+      headers["Authorization"] = `Bearer ${authToken}`;
+    }
+    const response = await fetch(`${API_URL}/api/records/export/csv${query.size ? `?${query}` : ""}`, {
+      headers,
+    });
+    if (!response.ok) throw new Error("Export failed");
+    return response.blob();
+  },
 };
 
 export const userService = {

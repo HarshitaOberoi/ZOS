@@ -44,6 +44,13 @@ export function RecordsPage() {
     page: 1,
   });
 
+  const [pagination, setPagination] = useState({
+    page: 1,
+    limit: PAGE_SIZE,
+    total: 0,
+    totalPages: 1,
+  });
+
   const canManage = [ROLES.ADMIN, ROLES.ANALYST].includes(user?.role);
   const canDelete = user?.role === ROLES.ADMIN;
 
@@ -55,9 +62,12 @@ export function RecordsPage() {
         category: filters.category || undefined,
         startDate: filters.startDate || undefined,
         endDate: filters.endDate || undefined,
-        limit: 100,
+        search: filters.search || undefined,
+        page: filters.page,
+        limit: PAGE_SIZE,
       });
       setRecords(response.records || []);
+      setPagination(response.pagination);
     } finally {
       setLoading(false);
     }
@@ -65,41 +75,67 @@ export function RecordsPage() {
 
   useEffect(() => {
     loadRecords();
-  }, [filters.type, filters.category, filters.startDate, filters.endDate]);
+  }, [filters.type, filters.category, filters.startDate, filters.endDate, filters.search, filters.page]);
 
-  const filteredRecords = useMemo(() => {
-    const query = filters.search.trim().toLowerCase();
-    const searched = query
-      ? records.filter((item) =>
-          [item.category, item.notes, item.type].some((value) =>
-            String(value || "").toLowerCase().includes(query)
-          )
-        )
-      : records;
-    return applySort(searched, filters.sortBy);
-  }, [filters.search, filters.sortBy, records]);
+  const sortedRecords = useMemo(() => {
+    return applySort(records, filters.sortBy);
+  }, [filters.sortBy, records]);
 
-  const totalPages = Math.max(1, Math.ceil(filteredRecords.length / PAGE_SIZE));
-  const currentPage = Math.min(filters.page, totalPages);
-  const paginatedRecords = filteredRecords.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+  const totalPages = pagination.totalPages;
+  const currentPage = filters.page;
+  const paginatedRecords = sortedRecords;
 
   async function handleCreate(values) {
-    await recordService.create(values);
-    toast.success("Record created successfully.");
-    await loadRecords();
+    try {
+      await recordService.create(values);
+      toast.success("Record created successfully.");
+      setModalOpen(false);
+      await loadRecords();
+    } catch (error) {
+      toast.error(error.message || "Failed to create record.");
+    }
   }
 
   async function handleUpdate(values) {
-    await recordService.update(editingRecord.id, values);
-    toast.success("Record updated successfully.");
-    setEditingRecord(null);
-    await loadRecords();
+    try {
+      await recordService.update(editingRecord.id, values);
+      toast.success("Record updated successfully.");
+      setEditingRecord(null);
+      setModalOpen(false);
+      await loadRecords();
+    } catch (error) {
+      toast.error(error.message || "Failed to update record.");
+    }
   }
 
   async function handleDelete(record) {
     await recordService.remove(record.id);
     toast.success(`${record.category} deleted.`);
     await loadRecords();
+  }
+
+  async function handleExport() {
+    try {
+      const blob = await recordService.exportCSV({
+        type: filters.type || undefined,
+        category: filters.category || undefined,
+        startDate: filters.startDate || undefined,
+        endDate: filters.endDate || undefined,
+        search: filters.search || undefined,
+      });
+
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `zorvyn-records-${new Date().toISOString().split("T")[0]}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+      toast.success("Records exported to CSV.");
+    } catch (error) {
+      toast.error("Failed to export records.");
+    }
   }
 
   return (
@@ -124,6 +160,7 @@ export function RecordsPage() {
           setEditingRecord(null);
           setModalOpen(true);
         }}
+        onExport={handleExport}
       />
 
       {loading ? (
@@ -132,7 +169,7 @@ export function RecordsPage() {
             <Skeleton key={index} className="h-24 w-full rounded-[28px]" />
           ))}
         </div>
-      ) : filteredRecords.length ? (
+      ) : records.length > 0 ? (
         <RecordsTable
           items={paginatedRecords}
           canEdit={canManage}

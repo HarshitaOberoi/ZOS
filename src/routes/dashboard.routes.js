@@ -10,5 +10,6 @@ const router = express.Router();
 router.use(authenticate);
 
 router.get("/summary", requireRole([ROLES.ADMIN, ROLES.ANALYST, ROLES.VIEWER]), validate(recordValidation.getSummary), dashboardController.getSummary);
+router.get("/search", requireRole([ROLES.ADMIN, ROLES.ANALYST, ROLES.VIEWER]), dashboardController.globalSearch);
 
 module.exports = router;

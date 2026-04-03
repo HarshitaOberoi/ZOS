@@ -157,38 +157,74 @@ zorvyn/
 `-- README.md
 ```
 
-## API Overview
+## API Documentation
 
-### Authentication
+All API requests should be made to the `/api` prefix. Authenticated requests require a `Authorization: Bearer <token>` header.
 
-- `POST /api/auth/register`
-- `POST /api/auth/login`
-- `GET /api/auth/me`
+### **Authentication**
 
-Handles account creation, login, and session restoration for authenticated users.
+| Endpoint | Method | Auth | Roles | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| `/auth/register` | `POST` | No | All | Register a new user account. |
+| `/auth/login` | `POST` | No | All | Login and receive a JWT token. |
+| `/auth/me` | `GET` | Yes | All | Get current user profile and session info. |
 
-### Users
+#### **Register**
+- **Body**: `{ name, email, password }`
+- **Response**: `201 Created` with user object (excluding password).
 
-- `GET /api/users`
-- `PATCH /api/users/:id`
+#### **Login**
+- **Body**: `{ email, password }`
+- **Response**: `200 OK` with `{ token, user }`.
 
-Supports admin-facing user listing and user role or status updates.
+---
 
-### Records
+### **Financial Records**
 
-- `GET /api/records`
-- `GET /api/records/:id`
-- `POST /api/records`
-- `PUT /api/records/:id`
-- `DELETE /api/records/:id`
+| Endpoint | Method | Auth | Roles | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| `/records` | `GET` | Yes | All | List records with pagination and filtering. |
+| `/records/:id` | `GET` | Yes | All | Get a single financial record by ID. |
+| `/records` | `POST` | Yes | Admin, Analyst | Create a new financial record. |
+| `/records/:id` | `PUT` | Yes | Admin, Analyst | Update an existing financial record. |
+| `/records/:id` | `DELETE` | Yes | Admin | Soft delete a financial record. |
+| `/records/export/csv` | `GET` | Yes | All | Export records as a CSV file. |
 
-Supports financial record retrieval and mutation with role-aware authorization rules.
+#### **List Records**
+- **Query Params**: `page`, `limit`, `type` (INCOME/EXPENSE), `category`, `startDate`, `endDate`, `search`.
+- **Response**: `200 OK` with `{ records, pagination: { page, limit, total, totalPages } }`.
 
-### Dashboard
+#### **Create Record**
+- **Body**: `{ amount, type, category, date, notes? }`
+- **Response**: `201 Created` with the new record object.
 
-- `GET /api/dashboard/summary`
+---
 
-Returns computed analytics such as totals, balances, recent transactions, and monthly summaries.
+### **Dashboard & Analytics**
+
+| Endpoint | Method | Auth | Roles | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| `/dashboard/summary` | `GET` | Yes | All | Get aggregated totals and trends. |
+| `/dashboard/search` | `GET` | Yes | All | Global search across records (and users if Admin). |
+
+#### **Dashboard Summary**
+- **Query Params**: `startDate`, `endDate`.
+- **Response**: `200 OK` with `{ totalIncome, totalExpenses, netBalance, categoryTotals, recentTransactions, monthlySummary }`.
+
+---
+
+### **User Management (Admin Only)**
+
+| Endpoint | Method | Auth | Roles | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| `/users` | `GET` | Yes | Admin | List all users in the system. |
+| `/users/:id` | `PATCH` | Yes | Admin | Update a user's role or account status. |
+
+#### **Update User**
+- **Body**: `{ role?, status? }` (Roles: `ADMIN`, `ANALYST`, `VIEWER`; Status: `ACTIVE`, `INACTIVE`)
+- **Response**: `200 OK` with `{ message, user }`.
+
+---
 
 ## Dashboard Analytics Explained
 
